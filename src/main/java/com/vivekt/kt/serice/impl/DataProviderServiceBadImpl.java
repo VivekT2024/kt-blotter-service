@@ -1,5 +1,6 @@
-package com.vivekt.kt.serice;
+package com.vivekt.kt.serice.impl;
 
+import com.vivekt.kt.serice.DataProvider;
 import com.vivekt.ktpp.datamodel.Order;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -10,8 +11,8 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.util.*;
 
-@Service
-public class KafkaDataProviderService {
+
+public class DataProviderServiceBadImpl implements DataProvider {
 
 
     public List<Order> getOrders() {

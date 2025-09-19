@@ -1,13 +1,13 @@
 package com.vivekt.kt.serice;
 
 
+import com.vivekt.kt.serice.impl.DataProviderServiceBadImpl;
 import com.vivekt.ktpp.datamodel.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Random;
 
@@ -18,7 +18,7 @@ public class OrderPushService {
     private SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    KafkaDataProviderService kafkaDataProviderService;
+    DataProvider kafkaDataProviderService;
 
     private final Random random = new Random();
 
