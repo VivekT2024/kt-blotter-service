@@ -2,61 +2,77 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>WebSocket Orders Demo</title>
+    <title>Live Orders Table</title>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f9f9f9;
-            margin: 0;
             padding: 20px;
         }
 
         h2 {
+            text-align: center;
             color: #333;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 90%;
+            margin: 20px auto;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
+
+        th, td {
+            padding: 12px 15px;
             text-align: center;
         }
 
-        #orders {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
+        th {
+            background-color: #007BFF;
+            color: #fff;
+            font-weight: bold;
         }
 
-        .order-card {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            padding: 15px 20px;
-            width: 220px;
-            transition: transform 0.2s, box-shadow 0.2s;
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
         }
 
-        .order-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        tr:hover {
+            background-color: #e6f0ff;
         }
 
-        .order-card h3 {
-            margin: 0 0 10px 0;
-            font-size: 18px;
-            color: #007BFF;
-        }
-
-        .order-field {
+        td {
             font-size: 14px;
-            color: #555;
-            margin: 3px 0;
+            color: #333;
         }
 
+        .table-container {
+            overflow-x: auto;
+        }
     </style>
 </head>
 <body>
-<h2>Live Orders</h2>
-<div id="orders"></div>
+<h2>Live Orders Table</h2>
+
+<div class="table-container">
+    <table id="orders-table">
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Symbol</th>
+            <th>Quantity</th>
+            <th>Side</th>
+            <th>Timestamp</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Orders will appear here -->
+        </tbody>
+    </table>
+</div>
 
 <script>
     let stompClient = null;
@@ -69,26 +85,27 @@
 
             stompClient.subscribe('/topic/messages', function(messageOutput) {
                 const order = JSON.parse(messageOutput.body);
-                showOrder(order);
+                addOrderToTable(order);
             });
         });
     }
 
-    function showOrder(order) {
-        const ordersDiv = document.getElementById('orders');
+    function addOrderToTable(order) {
+        const tbody = document.getElementById('orders-table').querySelector('tbody');
+        const row = document.createElement('tr');
 
-        const card = document.createElement('div');
-        card.className = 'order-card';
+        const timestamp = new Date().toLocaleTimeString();
 
-        card.innerHTML = `
-            <h3>Order ID: ${order.orderId || '-'}</h3>
-            <div class="order-field"><strong>Symbol:</strong> ${order.symbol || '-'}</div>
-            <div class="order-field"><strong>Quantity:</strong> ${order.quantity || '-'}</div>
-            <div class="order-field"><strong>Side:</strong> ${order.side || '-'}</div>
+        row.innerHTML = `
+            <td>${order.orderId || '-'}</td>
+            <td>${order.symbol || '-'}</td>
+            <td>${order.quantity || '-'}</td>
+            <td>${order.side || '-'}</td>
+            <td>${timestamp}</td>
         `;
 
-        // Append new orders at the top
-        ordersDiv.prepend(card);
+        // Add new orders on top
+        tbody.prepend(row);
     }
 
     connect();

@@ -1,7 +1,7 @@
 package com.vivekt.kt.serice;
 
 
-import com.vivekt.kt.model.Message;
+import com.vivekt.ktpp.datamodel.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,7 +11,7 @@ import java.time.LocalTime;
 import java.util.Random;
 
 @Service
-public class MessagePushService {
+public class OrderPushService {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -21,10 +21,7 @@ public class MessagePushService {
     // Push a message every 5 seconds
     @Scheduled(fixedRate = 500)
     public void pushMessage() {
-        Message message = new Message(
-                "Server",
-                "Random number: " + random.nextInt(100) + " at " + LocalTime.now()
-        );
-        messagingTemplate.convertAndSend("/topic/messages", message);
+        Order order = Order.builder().orderId("Ord-" + random.nextInt(1000)).symbol("Google").Side("buy").Quantity(random.nextInt(100)).build();
+        messagingTemplate.convertAndSend("/topic/messages", order);
     }
 }
