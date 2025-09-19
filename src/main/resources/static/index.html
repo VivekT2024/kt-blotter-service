@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket JSON Push Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h2 { color: #333; }
+        ul { list-style-type: none; padding: 0; }
+        li { background: #f0f0f0; margin: 5px 0; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+<h2>WebSocket JSON Push Demo</h2>
+<p>Messages from server will appear below automatically:</p>
+<ul id="messages"></ul>
+
+<script>
+    let stompClient = null;
+
+    function connect() {
+        const socket = new SockJS('/ws-message');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+
+            // Subscribe to server push topic
+            stompClient.subscribe('/topic/messages', function(messageOutput) {
+                const message = JSON.parse(messageOutput.body);
+                showMessage(message.sender + ": " + message.content);
+            });
+        });
+    }
+
+    function showMessage(message) {
+        const messages = document.getElementById('messages');
+        const li = document.createElement('li');
+        li.appendChild(document.createTextNode(message));
+        messages.appendChild(li);
+    }
+
+    // Initialize connection on page load
+    connect();
+</script>
+</body>
+</html>
