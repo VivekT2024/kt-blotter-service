@@ -2,3 +2,19 @@ security.protocol=SASL_SSL
 sasl.mechanism=PLAIN
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="myUser" password="myPassword";
 ssl.endpoint.identification.algorithm=https
+
+###
+bootstrap.servers=my.kafka.server:9093
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required \
+  username="myUser" \
+  password="myPassword";
+ssl.endpoint.identification.algorithm=https
+
+# --- Consumer settings ---
+group.id=my-secure-consumer-group
+enable.auto.commit=true
+auto.offset.reset=earliest
+key.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
