@@ -1,0 +1,6 @@
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required \
+  username="myUser" \
+  password="myPassword";
+ssl.endpoint.identification.algorithm=https
